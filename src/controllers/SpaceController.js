@@ -1,35 +1,35 @@
 const User = require('../models/User');
 const Vehicle = require('../models/Vehicle');
+const Space = require('../models/Spaces');
 
 module.exports = {
     async index(req, res) {
         const { user_id } = req.params;
 
         const user = await User.findByPk(user_id, {
-            include: { association: 'vehicles' }
+            include: { association: 'spaces' }
         });
         return res.json(user);
     },
 
     async store(req, res) {
-        const { user_id } = req.params;
-        const { brand, model, year, plate} = req.body;
+        const { user_id, vehicle_id } = req.params;
 
-        const user = await User.findByPk(user_id);
+        const vehicle = await Vehicle.findByPk(vehicle_id);
 
         if (!user_id) {
             return res.status(400).json({ error: 'user not found' });
         }
-    
-        if (!brand || !model || !year || !plate) {
+
+        if (!vehicle_id) {
             return res.json({
                 mensagem: 'Dados inválidos'
             }).status(400)
         }
-        
-        const vehicle = await Vehicle.create({  brand, model, year, plate, user_id });
     
-        return res.json(vehicle);
+        const space = await Space.create({  vehicle_id });
+
+        return res.json(space);
         },
 
         async delete(req, res) {

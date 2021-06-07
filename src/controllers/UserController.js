@@ -7,17 +7,44 @@ module.exports = {
     },
 
     async store(req, res) {
-        const { name, cpf, apartment, phone, age} = req.body;
-    
+        const {
+            name,
+            cpf,
+            apartment,
+            phone,
+            age
+        } = req.body;
+
         if (!name || !phone || !cpf || !apartment || !age) {
             return response.json({
                 mensagem: 'Dados inválidos'
             }).status(400)
         }
-        
-        const user = await User.create({ name, cpf, apartment, phone, age });
-    
-        return res.json(user);
-        }
-};
 
+        const user = await User.create({
+            name,
+            cpf,
+            apartment,
+            phone,
+            age
+        });
+
+        return res.json(user);
+    },
+
+    async delete(req, res) {
+        const { id } = req.params;
+
+        const user = await User.findByPk(id);
+
+        if (!id) {
+            return res.status(400).json({
+                error: 'user not found'
+            });
+        }
+
+        await user.removeUser(user);
+
+        return res.json();
+    }
+};
