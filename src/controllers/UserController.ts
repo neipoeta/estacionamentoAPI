@@ -1,6 +1,6 @@
-const User = require('../models/User');
+import User from '../models/User';
 
-module.exports = {
+export = {
     async index(req, res) {
         const users = await User.findAll();
         return res.json(users)
@@ -16,7 +16,7 @@ module.exports = {
         } = req.body;
 
         if (!name || !phone || !cpf || !apartment || !age) {
-            return response.json({
+            return res.json({
                 mensagem: 'Dados inválidos'
             }).status(400)
         }
@@ -43,7 +43,7 @@ module.exports = {
             });
         }
 
-        await user.removeUser(user);
+        await User.drop(this.user);
 
         return res.json();
     }

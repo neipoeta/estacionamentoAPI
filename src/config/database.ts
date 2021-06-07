@@ -1,4 +1,4 @@
-module.exports = {
+export = {
     dialect: 'mysql',
     host: 'localhost',
     username: 'root',
@@ -8,4 +8,4 @@ module.exports = {
         timestamp: false,
         underscored: true,
     }
-};
+}

@@ -1,35 +1,35 @@
-const User = require('../models/User');
-const Vehicle = require('../models/Vehicle');
-const Space = require('../models/Spaces');
+import User from '../models/User';
+import Vehicle from '../models/Vehicle';
 
-module.exports = {
+export = {
     async index(req, res) {
         const { user_id } = req.params;
 
         const user = await User.findByPk(user_id, {
-            include: { association: 'spaces' }
+            include: { association: 'vehicles' }
         });
         return res.json(user);
     },
 
     async store(req, res) {
-        const { user_id, vehicle_id } = req.params;
+        const { user_id } = req.params;
+        const { brand, model, year, plate} = req.body;
 
-        const vehicle = await Vehicle.findByPk(vehicle_id);
+        const user = await User.findByPk(user_id);
 
         if (!user_id) {
             return res.status(400).json({ error: 'user not found' });
         }
-
-        if (!vehicle_id) {
+    
+        if (!brand || !model || !year || !plate) {
             return res.json({
                 mensagem: 'Dados inválidos'
             }).status(400)
         }
+        
+        const vehicle = await Vehicle.create({  brand, model, year, plate, user_id });
     
-        const space = await Space.create({  vehicle_id });
-
-        return res.json(space);
+        return res.json(vehicle);
         },
 
         async delete(req, res) {
@@ -44,11 +44,11 @@ module.exports = {
                 });
             }
 
-            const vehicle = awaitVehicle.findOne({
+            const vehicle = await Vehicle.findOne({
                 where: { id }
             });
     
-            await vehicle.removeVehicle(vehicle);
+            await Vehicle.drop(this.vehicle);
     
             return res.json();
         }
