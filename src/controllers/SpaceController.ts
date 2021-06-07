@@ -4,30 +4,32 @@ import Vehicle from '../models/Vehicle';
 
 export = {
     async index(req, res) {
-        const { user_id } = req.params;
+        const { vehicle_id } = req.params;
 
-        const user = await User.findByPk(user_id, {
+        const vehicle = await Vehicle.findByPk(vehicle_id, {
             include: { association: 'spaces' }
         });
-        return res.json(user);
+        return res.json(vehicle);
+       
     },
 
     async store(req, res) {
-        const { user_id, vehicle_id } = req.params;
+        const { vehicle_id } = req.params;
+        const { countSpace } = req.body;
 
         const vehicle = await Vehicle.findByPk(vehicle_id);
 
-        if (!user_id) {
+        if (!vehicle_id) {
             return res.status(400).json({ error: 'user not found' });
         }
 
-        if (!vehicle_id) {
+        if (!countSpace) {
             return res.json({
                 mensagem: 'Dados inválidos'
             }).status(400)
         }
     
-        const space = await Space.create({  vehicle_id });
+        const space = await Space.create({ vehicle_id, countSpace });
 
         return res.json(space);
         },

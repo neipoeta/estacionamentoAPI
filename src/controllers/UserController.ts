@@ -3,7 +3,12 @@ import User from '../models/User';
 export = {
     async index(req, res) {
         const users = await User.findAll();
-        return res.json(users)
+
+        const { apartment, phone } = req.query;
+        const result = users.filter((user: any )=> {
+            return apartment ? user.apartment == apartment : true || phone ? user.phone == phone : true;
+        })
+        return res.json(result)
     },
 
     async store(req, res) {
